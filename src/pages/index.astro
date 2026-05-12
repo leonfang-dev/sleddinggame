@@ -1,11 +1,551 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { featureCards, heroStats, site, trailPlan, wikiPageList } from '../data/wiki';
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={site.name} description={site.description}>
+	<main>
+		<section class="hero section">
+			<div class="hero__copy">
+				<p class="eyebrow">Unofficial complete guide</p>
+				<h1>Sledding Game Wiki & Complete Guide.</h1>
+				<p class="hero__lede">
+					Sledding Game is a cozy online multiplayer sandbox by Max / The Sledding
+					Corporation: sled with up to 50 players, hang out at the Lodge, play mini-games,
+					fish at the summit, and hunt hidden secrets across the mountain.
+				</p>
+				<div class="hero__actions" aria-label="Primary actions">
+					<a class="button button--primary" href="/guide">Start the guide</a>
+					<a class="button button--ghost" href="/achievements">Track achievements</a>
+				</div>
+				<p class="hero__source">
+					Content is summarized from the downloaded reference pages in
+					<code>references/sleddinggame-wiki</code> and rewritten for this Astro build.
+				</p>
+			</div>
+
+			<div class="summit-card panel" aria-label="Sledding Game quick stats">
+				<div class="summit-card__sky">
+					<span class="sun"></span>
+					<span class="peak peak--back"></span>
+					<span class="peak peak--front"></span>
+					<span class="trail trail--one"></span>
+					<span class="trail trail--two"></span>
+					<span class="sled">SG</span>
+				</div>
+				<div class="stats-grid">
+					{
+						heroStats.map((stat) => (
+							<div>
+								<strong>{stat.value}</strong>
+								<span>{stat.label}</span>
+							</div>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section class="feature-strip section" aria-labelledby="featured-heading">
+			<div class="section-heading">
+				<p class="eyebrow">Run planning</p>
+				<h2 id="featured-heading">Pick the guide that matches tonight's goal.</h2>
+			</div>
+			<div class="feature-grid">
+				{
+					featureCards.map((card) => (
+						<a class="feature-card panel" href={card.href}>
+							<span>{card.meta}</span>
+							<h3>{card.title}</h3>
+							<p>{card.text}</p>
+						</a>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="route-board section panel" aria-labelledby="route-heading">
+			<div>
+				<p class="eyebrow">Three-run habit</p>
+				<h2 id="route-heading">A simple loop for every session.</h2>
+				<p>
+					Instead of restarting endlessly, use a repeatable scout-string-cash flow. It keeps
+					practice productive even when the perfect descent falls apart.
+				</p>
+			</div>
+			<div class="route-steps">
+				{
+					trailPlan.map((item) => (
+						<article>
+							<strong>{item.step}</strong>
+							<h3>{item.title}</h3>
+							<p>{item.text}</p>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="wiki-index section" aria-labelledby="wiki-index-heading">
+			<div class="section-heading">
+				<p class="eyebrow">Wiki shelves</p>
+				<h2 id="wiki-index-heading">Browse the rebuild.</h2>
+			</div>
+			<div class="wiki-grid">
+				{
+					wikiPageList.map((page) => (
+						<a class="wiki-card" href={`/${page.slug}`} style={`--accent: ${page.accent}`}>
+							<span>{page.badge}</span>
+							<h3>{page.title}</h3>
+							<p>{page.summary}</p>
+						</a>
+					))
+				}
+			</div>
+		</section>
+	</main>
 </Layout>
+
+<style>
+	main {
+		padding-top: 3.4rem;
+	}
+
+	.hero {
+		display: grid;
+		grid-template-columns: minmax(0, 0.92fr) minmax(320px, 0.66fr);
+		gap: clamp(2rem, 6vw, 4.8rem);
+		align-items: start;
+	}
+
+	.hero__copy {
+		position: relative;
+	}
+
+	.hero__copy::before {
+		position: absolute;
+		top: -2.6rem;
+		left: -2rem;
+		z-index: -1;
+		width: 8rem;
+		height: 8rem;
+		content: '';
+		border-radius: 40% 60% 46% 54%;
+		background: rgba(255, 255, 255, 0.7);
+		filter: blur(2px);
+		transform: rotate(-10deg);
+	}
+
+	h1,
+	h2,
+	h3,
+	p {
+		margin-top: 0;
+	}
+
+	h1 {
+		max-width: 11ch;
+		margin-bottom: 1.35rem;
+		font-family: var(--font-display);
+		font-size: clamp(3.2rem, 7.8vw, 6.7rem);
+		line-height: 0.92;
+		letter-spacing: -0.07em;
+	}
+
+	.hero__lede {
+		max-width: 39rem;
+		margin-bottom: 1.75rem;
+		color: var(--ink-muted);
+		font-size: clamp(1.04rem, 1.8vw, 1.2rem);
+		line-height: 1.78;
+	}
+
+	.hero__actions {
+		display: flex;
+		gap: 0.8rem;
+		flex-wrap: wrap;
+		margin-bottom: 1.1rem;
+	}
+
+	.button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 3.1rem;
+		padding: 0.9rem 1.15rem;
+		font-weight: 950;
+		text-decoration: none;
+		border-radius: 999px;
+		transition:
+			transform 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.button:hover {
+		transform: translateY(-2px);
+	}
+
+	.button--primary {
+		color: white;
+		background:
+			linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent),
+			linear-gradient(135deg, var(--deep), var(--glacier));
+		box-shadow: 0 18px 35px rgba(31, 155, 180, 0.26);
+	}
+
+	.button--ghost {
+		color: var(--deep);
+		border: 1px solid rgba(255, 255, 255, 0.8);
+		background: rgba(255, 255, 255, 0.68);
+	}
+
+	.hero__source {
+		max-width: 36rem;
+		color: var(--ink-muted);
+		font-size: 0.92rem;
+		line-height: 1.6;
+	}
+
+	.summit-card {
+		position: relative;
+		overflow: hidden;
+		padding: clamp(1rem, 2.4vw, 1.2rem);
+	}
+
+	.summit-card::before {
+		position: absolute;
+		inset: auto -20% -28% -20%;
+		height: 45%;
+		content: '';
+		background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.9), transparent 70%);
+	}
+
+	.summit-card__sky {
+		position: relative;
+		min-height: 310px;
+		overflow: hidden;
+		border-radius: 26px;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent 45%),
+			linear-gradient(160deg, #76d5ee 0%, #dff6ff 48%, #fff7ea 100%);
+	}
+
+	.sun {
+		position: absolute;
+		top: 2rem;
+		right: 2.2rem;
+		width: 4.2rem;
+		height: 4.2rem;
+		border-radius: 999px;
+		background: #ffd27c;
+		box-shadow:
+			0 0 0 1.4rem rgba(255, 210, 124, 0.18),
+			0 0 5rem rgba(255, 210, 124, 0.8);
+	}
+
+	.peak {
+		position: absolute;
+		bottom: -1rem;
+		width: 82%;
+		aspect-ratio: 1.3;
+		clip-path: polygon(50% 0, 100% 100%, 0 100%);
+	}
+
+	.peak--back {
+		left: -20%;
+		background: linear-gradient(135deg, #c4ebf4, #ffffff 55%, #95cedc);
+		opacity: 0.82;
+	}
+
+	.peak--front {
+		right: -10%;
+		background: linear-gradient(135deg, #f9ffff 0 42%, #a6dce7 42% 62%, #ffffff 62%);
+		filter: drop-shadow(-18px 20px 35px rgba(10, 50, 70, 0.14));
+	}
+
+	.trail {
+		position: absolute;
+		bottom: 0;
+		left: 44%;
+		width: 6rem;
+		height: 15rem;
+		border-radius: 100% 100% 0 0;
+		background: rgba(255, 255, 255, 0.76);
+		transform-origin: bottom;
+	}
+
+	.trail--one {
+		transform: rotate(24deg);
+	}
+
+	.trail--two {
+		left: 57%;
+		width: 3.2rem;
+		height: 11rem;
+		transform: rotate(-16deg);
+		opacity: 0.78;
+	}
+
+	.sled {
+		position: absolute;
+		right: 26%;
+		bottom: 24%;
+		display: grid;
+		width: 2.6rem;
+		height: 2.6rem;
+		place-items: center;
+		color: white;
+		font-size: 0.74rem;
+		font-weight: 950;
+		border-radius: 999px;
+		background: var(--coral);
+		box-shadow: 0 12px 22px rgba(106, 55, 44, 0.24);
+		animation: drift 5s ease-in-out infinite;
+	}
+
+	@keyframes drift {
+		0%,
+		100% {
+			translate: 0 0;
+			rotate: -10deg;
+		}
+
+		50% {
+			translate: -12px 10px;
+			rotate: 7deg;
+		}
+	}
+
+	.stats-grid {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem;
+		margin-top: 0.95rem;
+	}
+
+	.stats-grid div {
+		padding: 1.05rem;
+		border: 1px solid rgba(255, 255, 255, 0.82);
+		border-radius: 20px;
+		background: rgba(255, 255, 255, 0.62);
+	}
+
+	.stats-grid strong {
+		display: block;
+		font-family: var(--font-display);
+		font-size: clamp(1.9rem, 5vw, 3rem);
+		line-height: 0.9;
+		letter-spacing: -0.06em;
+	}
+
+	.stats-grid span {
+		display: block;
+		margin-top: 0.3rem;
+		color: var(--ink-muted);
+		font-size: 0.86rem;
+		font-weight: 850;
+	}
+
+	.feature-strip,
+	.route-board,
+	.wiki-index {
+		margin-top: clamp(4.5rem, 9vw, 7.5rem);
+	}
+
+	.section-heading {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 2rem;
+		margin-bottom: 1.7rem;
+	}
+
+	.section-heading h2,
+	.route-board h2 {
+		max-width: 16ch;
+		margin-bottom: 0;
+		font-family: var(--font-display);
+		font-size: clamp(2.15rem, 5vw, 3.8rem);
+		line-height: 0.95;
+		letter-spacing: -0.07em;
+	}
+
+	.feature-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1.25rem;
+	}
+
+	.feature-card {
+		position: relative;
+		min-height: 14.5rem;
+		overflow: hidden;
+		padding: 1.55rem;
+		text-decoration: none;
+		transition:
+			transform 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.feature-card::after {
+		position: absolute;
+		right: -3rem;
+		bottom: -4rem;
+		width: 11rem;
+		height: 11rem;
+		content: '';
+		border-radius: 44% 56% 50% 50%;
+		background: rgba(31, 155, 180, 0.12);
+	}
+
+	.feature-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 28px 80px rgba(10, 38, 54, 0.18);
+	}
+
+	.feature-card span,
+	.wiki-card span {
+		display: inline-flex;
+		margin-bottom: 1.2rem;
+		color: var(--pine);
+		font-size: 0.76rem;
+		font-weight: 950;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	.feature-card h3,
+	.wiki-card h3,
+	.route-steps h3 {
+		margin-bottom: 0.75rem;
+		font-family: var(--font-display);
+		font-size: 1.72rem;
+		line-height: 1;
+		letter-spacing: -0.05em;
+	}
+
+	.feature-card p,
+	.wiki-card p,
+	.route-board p,
+	.route-steps p {
+		margin-bottom: 0;
+		color: var(--ink-muted);
+		line-height: 1.65;
+	}
+
+	.route-board {
+		display: grid;
+		grid-template-columns: 0.72fr 1.28fr;
+		gap: clamp(1.8rem, 5vw, 3.6rem);
+		padding: clamp(1.35rem, 4vw, 2.25rem);
+	}
+
+	.route-steps {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.route-steps article {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.2rem 1rem;
+		padding: 1.15rem;
+		border: 1px solid rgba(255, 255, 255, 0.78);
+		border-radius: 22px;
+		background: rgba(255, 255, 255, 0.54);
+	}
+
+	.route-steps strong {
+		grid-row: span 2;
+		color: var(--gold);
+		font-family: var(--font-display);
+		font-size: 2.1rem;
+		line-height: 0.9;
+		letter-spacing: -0.06em;
+	}
+
+	.wiki-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1.15rem;
+	}
+
+	.wiki-card {
+		position: relative;
+		min-height: 14.2rem;
+		overflow: hidden;
+		padding: 1.25rem;
+		color: var(--ink);
+		text-decoration: none;
+		border: 1px solid rgba(255, 255, 255, 0.78);
+		border-radius: var(--radius-lg);
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.48)),
+			radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 24%, transparent), transparent 55%);
+		box-shadow: 0 14px 42px rgba(10, 38, 54, 0.09);
+		transition:
+			transform 180ms ease,
+			background 180ms ease;
+	}
+
+	.wiki-card::before {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 0.35rem;
+		content: '';
+		background: var(--accent);
+	}
+
+	.wiki-card:hover {
+		transform: translateY(-4px) rotate(-0.4deg);
+		background-color: rgba(255, 255, 255, 0.84);
+	}
+
+	@media (max-width: 980px) {
+		main {
+			padding-top: 2.4rem;
+		}
+
+		.hero,
+		.route-board {
+			grid-template-columns: 1fr;
+		}
+
+		.feature-grid,
+		.wiki-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 640px) {
+		h1 {
+			font-size: clamp(3.2rem, 18vw, 5.4rem);
+		}
+
+		.hero {
+			gap: 2rem;
+		}
+
+		.summit-card__sky {
+			min-height: 255px;
+		}
+
+		.feature-grid,
+		.wiki-grid,
+		.stats-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.section-heading {
+			align-items: flex-start;
+			flex-direction: column;
+		}
+
+		.route-steps article {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

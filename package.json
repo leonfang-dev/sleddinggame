@@ -1,5 +1,6 @@
 {
-  "name": "receptive-raspberry",
+  "name": "sledding-game-wiki",
+  "description": "Astro-powered fan guide inspired by Sledding Game wiki structure.",
   "type": "module",
   "version": "0.0.1",
   "engines": {
